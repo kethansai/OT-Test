@@ -1,377 +1,427 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://cdn.rawgit.com/krakenjs/post-robot/7da06445/dist/post-robot.js"></script>
     <title>Document</title>
-  </head>
-  <style>
+</head>
+<style>
     li:hover {
-      cursor: pointer;
-      font-weight: 600;
+        cursor: pointer;
+        font-weight: 600;
     }
     li {
-      padding: 6.5px;
-      list-style-type: none;
+        padding: 6.5px;
+        list-style-type: none;
     }
     ul {
-      padding-inline-start: 0;
+        padding-inline-start: 0;
     }
     li:nth-child(odd) {
-      background: #f4f4f4;
+        background: #f4f4f4;
     }
     main {
-      font-family: Roboto, sans-serif;
-      font-size: 13px;
-      color: #3d464d;
+        font-family: Roboto, sans-serif;
+        font-size: 13px;
+        color: #3d464d;
     }
     body {
-      color: #333;
-      margin: 0;
-      padding: 8px;
-      box-sizing: border-box;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-        Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+        color: #333;
+        margin: 0;
+        padding: 8px;
+        box-sizing: border-box;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
     }
-  </style>
-  <body>
+</style>
+<body>
     <h1></h1>
-    <div><ul id="list"></ul></div>
+    <div>
+        <ul id="list"></ul>
+    </div>
     <script>
-      //   /*--- FOR BOOMI - START ---*/
-      //   var entityID = "1224";
-      //   var entityType =
-      //     "Candidate"; /*--- Candidate, ClientContact (if Client Contact), Lead ---*/
-      //   var countryLabel = 0; /*-- PrivateLabelID --*/
-      //   /*--- FOR BOOMI - END ---*/
-      // This function parses the parameters provided by Bullhorn
-      const parseParams = () => {
-        // parse query string
-        const params = new URLSearchParams(window.location.search);
-        const obj = {};
-        // iterate over all keys
-        for (const key of params.keys()) {
-          if (params.getAll(key).length > 1) {
-            obj[key] = params.getAll(key);
-          } else {
-            obj[key] = params.get(key);
-          }
-        }
-        return obj;
-      };
-      const params = parseParams();
-      console.log("params recevived", params);
-      //This gets the ?Entity value from the params. This will be: Candidate, ClientContact, or JobOrder
-       
-      const entityID = decodeURIComponent(params.EntityID);
-      const entityType = decodeURIComponent(params.EntityType);
-      const countryLabel = parseInt(decodeURIComponent(params.PrivateLabelID));
 
-      var redirectURL;
-      var retrevalURL;
-      var magicToken;
-      var chCandOTPCURL =
-        "https://privacy-portal-manpowergroup.my.onetrust.com/ui/#/preferences/multipage/token/";
-      var chContOTPCURL =
-        "https://privacy-portal-manpowergroup.my.onetrust.com/ui/#/preferences/multipage/token/";
-      var chLeadOTPCURL = "https://ot.com/abcd";
-      var esCandOTPCURL =
-        "https://privacy-portal-manpowergroup.my.onetrust.com/ui/#/preferences/multipage/token/";
-      var esContOTPCURL =
-        "https://privacy-portal-manpowergroup.my.onetrust.com/ui/#/preferences/multipage/token/";
-      var esLeadOTPCURL = "https://ot.com/abcd";
-      var itCandOTPCURL =
-        "https://privacy-portal-manpowergroup.my.onetrust.com/ui/#/preferences/multipage/token/";
-      var itContOTPCURL =
-        "https://privacy-portal-manpowergroup.my.onetrust.com/ui/#/preferences/multipage/token/";
-      var itLeadOTPCURL =
-        "https://privacy-portal-manpowergroup.my.onetrust.com/ui/#/preferences/multipage/token/";
-      var esCandOTPCURLtrng =
-        "https://privacyportaluatde.onetrust.com/ui/#/preferences/multipage/token/";
-      var esContOTPCURLtrng =
-        "https://privacyportaluatde.onetrust.com/ui/#/preferences/multipage/token/";
-      var itCandOTPCURLtrng =
-        "https://privacyportaluatde.onetrust.com/ui/#/preferences/multipage/token/";
-      var itContOTPCURLtrng =
-        "https://privacyportaluatde.onetrust.com/ui/#/preferences/multipage/token/";
-      var itLeadOTPCURLtrng =
-        "https://privacyportaluatde.onetrust.com/ui/#/preferences/multipage/token/";
-      var chCandOTPCURLtrng =
-        "https://privacyportaluatde.onetrust.com/ui/#/preferences/multipage/token/";
-      var chContOTPCURLtrng =
-        "https://privacyportaluatde.onetrust.com/ui/#/preferences/multipage/token/";
+        const parseParams = () => {
+            // parse query string
+            const params = new URLSearchParams(window.location.search);
+            const obj = {};
+            // iterate over all keys
+            for (const key of params.keys()) {
+                if (params.getAll(key).length > 1) {
+                    obj[key] = params.getAll(key);
+                } else {
+                    obj[key] = params.get(key);
+                }
+            }
+            return obj;
+        };
+        const params = parseParams();
+        console.log("CZ0410: params recevived", JSON.stringify(params));
+        
+        const entityID = decodeURIComponent(params.EntityID);
+        const entityType = decodeURIComponent(params.EntityType);
+        const countryLabel = parseInt(decodeURIComponent(params.PrivateLabelID));
+		
+		var redirectURL; 
+		var retrevalURL;
+		var magicToken;
 
-      /*-- Switzerland --*/
-      if (
-        countryLabel === 37553 ||
-        countryLabel === 37477 ||
-        countryLabel === 38769
-      ) {
-        if (entityType === "Candidate") {
-          retrevalURL = `entity/${entityType}/${entityID}?fields=customText36,customTextBlock7`;
-          redirectURL = chCandOTPCURL;
-        } else if (entityType === "ClientContact") {
-          retrevalURL = `entity/${entityType}/${entityID}?fields=customText11,customTextBlock2`;
-          redirectURL = chContOTPCURL;
-        } //else {
-        //   retrevalURL = `entity/${entityType}/${entityID}?fields=customText13`;
-        //   redirectURL = chLeadOTPCURL;
-        // }
-        postRobot
-          .send(window.parent.parent, "httpGET", { relativeURL: retrevalURL })
-          .then(function (res) {
-            console.log("res.data.data", res.data.data);
-            if (entityType === "Candidate") {
-              magicToken = res.data.data.data.customText36;
-              magicToken =
-                magicToken !== undefined || magicToken !== ""
-                  ? magicToken
-                  : res.data.data.data.customTextBlock7;
-            } else if (entityType === "ClientContact") {
-              magicToken = res.data.data.data.customText11;
-              magicToken =
-                magicToken !== undefined || magicToken !== ""
-                  ? magicToken
-                  : res.data.data.data.customTextBlock2;
-            } //else {
-            //   magicToken = res.data.data.data.customText13;
-            // }
-            console.log("magicToken", magicToken);
-            redirectURL = redirectURL + magicToken;
-            console.log("redirectURL: ", redirectURL);
-            if (!magicToken || magicToken === null || magicToken === "") {
-              window.onload = function () {
-                console.log("Magictoken null or blank");
-                document.getElementById("displayMsg").innerHTML =
-                  "OneTrust link not available. Please try again after 10 mins. If the problem persists, please contact IT Support.";
-              };
-            } else {
-              window.location.replace(redirectURL);
-            }
-          });
-      }
+		var chCandOTPCURL = "https://privacy-portal-manpowergroup.my.onetrust.com/ui/#/preferences/multipage/token/31b6d7a6-dd9e-4406-ae78-18da92b9c6a3/";
+		var chContOTPCURL = "https://privacy-portal-manpowergroup.my.onetrust.com/ui/#/preferences/multipage/token/202b38be-061b-424a-a184-450ba234fedf/";
+		var chLeadOTPCURL = "https://ot.com/abcd";
+		
+		var esCandOTPCURL = "https://privacy-portal-manpowergroup.my.onetrust.com/ui/#/preferences/multipage/token/a535cbc9-b88d-4765-97e1-67145d9ceaff/";
+		var esContOTPCURL = "https://privacy-portal-manpowergroup.my.onetrust.com/ui/#/preferences/multipage/token/6bd83ff1-f150-4c1c-b84e-2a2f7ec3a0ce/";
+		var esLeadOTPCURL = "https://ot.com/abcd";
+		
+		var itCandOTPCURL = "https://privacy-portal-manpowergroup.my.onetrust.com/ui/#/preferences/multipage/token/269a5bb3-8c2d-4ce1-9ead-74238d862400/";
+		var itContOTPCURL = "https://privacy-portal-manpowergroup.my.onetrust.com/ui/#/preferences/multipage/token/8ba0f7d4-5511-462f-a62a-413365487c27/";
+		var itLeadOTPCURL = "https://privacy-portal-manpowergroup.my.onetrust.com/ui/#/preferences/multipage/token/de464831-c6af-4a29-af63-c4cc4b50985e/";
 
-      /*-- Spain --*/ if (countryLabel === 37527 || countryLabel === 37484) {
-        if (entityType === "Candidate") {
-          retrevalURL = `entity/${entityType}/${entityID}?fields=customText36,customTextBlock7`;
-          redirectURL = esCandOTPCURL;
-        } else if (entityType === "ClientContact") {
-          retrevalURL = `entity/${entityType}/${entityID}?fields=customText11,customTextBlock2`;
-          redirectURL = esContOTPCURL;
-        }
-        // else {
-        //   retrevalURL = `entity/${entityType}/${entityID}?fields=customText13`;
-        //   redirectURL = esLeadOTPCURL;
-        // }
-        postRobot
-          .send(window.parent.parent, "httpGET", { relativeURL: retrevalURL })
-          .then(function (res) {
-            console.log("res.data.data", res.data.data);
-            if (entityType === "Candidate") {
-              magicToken = res.data.data.data.customText36;
-              magicToken =
-                magicToken !== undefined || magicToken !== ""
-                  ? magicToken
-                  : res.data.data.data.customTextBlock7;
-            } else if (entityType === "ClientContact") {
-              magicToken = res.data.data.data.customText11;
-              magicToken =
-                magicToken !== undefined || magicToken !== ""
-                  ? magicToken
-                  : res.data.data.data.customTextBlock2;
-            } //else {
-            //   magicToken = res.data.data.data.customText13;
-            // }
-            console.log("magicToken", magicToken);
-            redirectURL = redirectURL + magicToken;
-            console.log("redirectURL: ", redirectURL);
-            if (!magicToken || magicToken === null || magicToken === "") {
-              window.onload = function () {
-                console.log("Magictoken null or blank");
-                document.getElementById("displayMsg").innerHTML =
-                  "OneTrust link not available. Please try again after 10 mins. If the problem persists, please contact IT Support.";
-              };
-            } else {
-              window.location.replace(redirectURL);
-            }
-          });
-      }
+		var esCandOTPCURLtrng = "https://privacyportaluatde.onetrust.com/ui/#/preferences/multipage/token/bcde6748-c03d-4d58-859f-a1f9e8bc3da0/";
+		var esContOTPCURLtrng = "https://privacyportaluatde.onetrust.com/ui/#/preferences/multipage/token/3ab758e7-eb09-407a-a5bc-c7540c55aa83/";
+		
+		var itCandOTPCURLtrng = "https://privacyportaluatde.onetrust.com/ui/#/preferences/multipage/token/6aa27574-0a52-4cf4-ad4b-c2a8ebf593f8/";
+		var itContOTPCURLtrng = "https://privacyportaluatde.onetrust.com/ui/#/preferences/multipage/token/1860182c-257f-4caa-8a84-723889aae938/";
+		var itLeadOTPCURLtrng = "https://privacyportaluatde.onetrust.com/ui/#/preferences/multipage/token/62c32983-b829-427f-995a-51c22b759b83/";
 
-      /*-- Italy --*/ if (countryLabel === 37554 || countryLabel === 37482) {
-        if (entityType === "Candidate") {
-          retrevalURL = `entity/${entityType}/${entityID}?fields=customText36,customTextBlock7`;
-          redirectURL = itCandOTPCURL;
-        } else if (entityType === "ClientContact") {
-          retrevalURL = `entity/${entityType}/${entityID}?fields=customText11,customTextBlock2`;
-          redirectURL = itContOTPCURL;
-        } else {
-          retrevalURL = `entity/${entityType}/${entityID}?fields=customText13,customTextBlock3`;
-          redirectURL = itLeadOTPCURL;
-        }
-        postRobot
-          .send(window.parent.parent, "httpGET", { relativeURL: retrevalURL })
-          .then(function (res) {
-            console.log("res.data.data", res.data.data);
-            if (entityType === "Candidate") {
-              magicToken = res.data.data.data.customText36;
-              magicToken =
-                magicToken !== undefined || magicToken !== ""
-                  ? magicToken
-                  : res.data.data.data.customTextBlock7;
-            } else if (entityType === "ClientContact") {
-              magicToken = res.data.data.data.customText11;
-              magicToken =
-                magicToken !== undefined || magicToken !== ""
-                  ? magicToken
-                  : res.data.data.data.customTextBlock2;
-            } else {
-              magicToken = res.data.data.data.customText13;
-              magicToken =
-                magicToken !== undefined || magicToken !== ""
-                  ? magicToken
-                  : res.data.data.data.customTextBlock3;
-            }
-            console.log("magicToken", magicToken);
-            redirectURL = redirectURL + magicToken;
-            console.log("redirectURL: ", redirectURL);
-            if (!magicToken || magicToken === null || magicToken === "") {
-              window.onload = function () {
-                console.log("Magictoken null or blank");
-                document.getElementById("displayMsg").innerHTML =
-                  "OneTrust link not available. Please try again after 10 mins. If the problem persists, please contact IT Support.";
-              };
-            } else {
-              window.location.replace(redirectURL);
-            }
-          });
-      }
+		var chCandOTPCURLtrng = "https://privacyportaluatde.onetrust.com/ui/#/preferences/multipage/token/41a21d07-465f-41ca-a0f0-675658b4ed6d/";
+		var chContOTPCURLtrng = "https://privacyportaluatde.onetrust.com/ui/#/preferences/multipage/token/94fac9d5-480f-452f-9b20-748793603633/";
+		
+		/*-- Switzerland --*/
+		if (countryLabel === 37553 || countryLabel === 37477 || countryLabel === 37530) {
+            if (entityType === 'Candidate') {
+				retrevalURL = `entity/${entityType}/${entityID}?fields=customText36,customTextBlock7`;
+				redirectURL = chCandOTPCURL;
+			}
+			else if (entityType === 'ClientContact') {
+				retrevalURL = `entity/${entityType}/${entityID}?fields=customText11,customTextBlock2`;			
+				redirectURL = chContOTPCURL;
+			}
+			else {
+				retrevalURL = `entity/${entityType}/${entityID}?fields=customText13,customTextBlock3`;
+				redirectURL = chLeadOTPCURL;
+			}
+			postRobot.send(window.parent.parent, "httpGET", {relativeURL: retrevalURL,})
+			.then(function(res) {
+				console.log("res.data.data", res.data.data);
 
-      /*-- Spain UAT/Training --*/ if (
-        countryLabel === 38723 ||
-        countryLabel === 38724
-      ) {
-        if (entityType === "Candidate") {
-          retrevalURL = `entity/${entityType}/${entityID}?fields=customText36`;
-          redirectURL = esCandOTPCURLtrng;
-        } else if (entityType === "ClientContact") {
-          retrevalURL = `entity/${entityType}/${entityID}?fields=customText11`;
-          redirectURL = esContOTPCURLtrng;
-        } else {
-          retrevalURL = `entity/${entityType}/${entityID}?fields=customText13`;
-          redirectURL = esLeadOTPCURL;
-        }
-        postRobot
-          .send(window.parent.parent, "httpGET", { relativeURL: retrevalURL })
-          .then(function (res) {
-            console.log("res.data.data", res.data.data);
-            if (entityType === "Candidate") {
-              magicToken = res.data.data.data.customText36;
-            } else if (entityType === "ClientContact") {
-              magicToken = res.data.data.data.customText11;
-            } else {
-              magicToken = res.data.data.data.customText13;
-            }
-            console.log("magicToken", magicToken);
-            redirectURL = redirectURL + magicToken;
-            console.log("redirectURL: ", redirectURL);
-            if (!magicToken || magicToken === null || magicToken === "") {
-              window.onload = function () {
-                console.log("Magictoken null or blank");
-                document.getElementById("displayMsg").innerHTML =
-                  "OneTrust link not available. Please try again after 10 mins. If the problem persists, please contact IT Support.";
-              };
-            } else {
-              window.location.replace(redirectURL);
-            }
-          });
-      }
+				if (entityType === 'Candidate') {
+					if(res.data.data.data.customText36 !== ""){
+                        magicToken = res.data.data.data.customText36;
+                    }else{
+                        magicToken = res.data.data.data.customTextBlock7;
+                    }
+				}
+				else if (entityType === 'ClientContact') {
+					if(res.data.data.data.customText11 !== ""){
+                        magicToken = res.data.data.data.customText11;
+                    }else{
+                        magicToken = res.data.data.data.customTextBlock2;
+                    }
+				}
+				else {
+					if(res.data.data.data.customText13 !== ""){
+                        magicToken = res.data.data.data.customText13;
+                    }else{
+                        magicToken = res.data.data.data.customTextBlock3;
+                    }
+				}
+				console.log("magicToken", magicToken);
+				redirectURL = redirectURL + magicToken;
+				console.log('redirectURL: ', redirectURL);
+		
+				if (!magicToken || magicToken === null || magicToken === "") {
+					window.onload = function() {
+						console.log('Magictoken null or blank');
+						document.getElementById("displayMsg").innerHTML='OneTrust link not available. Please try again after 10 mins. If the problem persists, please contact IT Support.';		
+					}
+				}
+				else {
+					window.location.replace(redirectURL);
+				}
+			});
+		}
 
-      /*-- Italy UAT/Training --*/ if (
-        countryLabel === 38766 ||
-        countryLabel === 38768
-      ) {
-        if (entityType === "Candidate") {
-          retrevalURL = `entity/${entityType}/${entityID}?fields=customText36`;
-          redirectURL = itCandOTPCURLtrng;
-        } else if (entityType === "ClientContact") {
-          retrevalURL = `entity/${entityType}/${entityID}?fields=customText11`;
-          redirectURL = itContOTPCURLtrng;
-        } else {
-          retrevalURL = `entity/${entityType}/${entityID}?fields=customText13`;
-          redirectURL = itLeadOTPCURLtrng;
-        }
-        postRobot
-          .send(window.parent.parent, "httpGET", { relativeURL: retrevalURL })
-          .then(function (res) {
-            console.log("res.data.data", res.data.data);
-            if (entityType === "Candidate") {
-              magicToken = res.data.data.data.customText36;
-            } else if (entityType === "ClientContact") {
-              magicToken = res.data.data.data.customText11;
-            } else {
-              magicToken = res.data.data.data.customText13;
-            }
-            console.log("magicToken", magicToken);
-            redirectURL = redirectURL + magicToken;
-            console.log("redirectURL: ", redirectURL);
-            if (!magicToken || magicToken === null || magicToken === "") {
-              window.onload = function () {
-                console.log("Magictoken null or blank");
-                document.getElementById("displayMsg").innerHTML =
-                  "OneTrust link not available. Please try again after 10 mins. If the problem persists, please contact IT Support.";
-              };
-            } else {
-              window.location.replace(redirectURL);
-            }
-          });
-      }
+		/*-- Spain --*/
+		if (countryLabel === 37527 || countryLabel === 37484) {
+			if (entityType === 'Candidate') {
+				retrevalURL = `entity/${entityType}/${entityID}?fields=customText36,customTextBlock7`;
+				redirectURL = esCandOTPCURL;
+			}
+			else if (entityType === 'ClientContact') {
+				retrevalURL = `entity/${entityType}/${entityID}?fields=customText11,customTextBlock2`;			
+				redirectURL = esContOTPCURL;
+			}
+			else { 
+				retrevalURL = `entity/${entityType}/${entityID}?fields=customText13,customTextBlock3`;
+				redirectURL = esLeadOTPCURL;
+			}
+			
+			postRobot.send(window.parent.parent, "httpGET", {relativeURL: retrevalURL,})
+			.then(function(res) {
+				console.log("res.data.data", res.data.data);
 
-      /*-- Switzerland UAT/Training --*/ if (
-        countryLabel === 38769 ||
-        countryLabel === 38777 ||
-        countryLabel === 38778
-      ) {
-        if (entityType === "Candidate") {
-          retrevalURL = `entity/${entityType}/${entityID}?fields=customText36`;
-          redirectURL = chCandOTPCURLtrng;
-        } else if (entityType === "ClientContact") {
-          retrevalURL = `entity/${entityType}/${entityID}?fields=customText11`;
-          redirectURL = chContOTPCURLtrng;
-        } else {
-          retrevalURL = `entity/${entityType}/${entityID}?fields=customText13`;
-          redirectURL = chLeadOTPCURL;
-        }
-        postRobot
-          .send(window.parent.parent, "httpGET", { relativeURL: retrevalURL })
-          .then(function (res) {
-            console.log("res.data.data", res.data.data);
-            if (entityType === "Candidate") {
-              magicToken = res.data.data.data.customText36;
-            } else if (entityType === "ClientContact") {
-              magicToken = res.data.data.data.customText11;
-            } else {
-              magicToken = res.data.data.data.customText13;
-            }
-            console.log("magicToken", magicToken);
-            redirectURL = redirectURL + magicToken;
-            console.log("redirectURL: ", redirectURL);
-            if (!magicToken || magicToken === null || magicToken === "") {
-              window.onload = function () {
-                console.log("Magictoken null or blank");
-                document.getElementById("displayMsg").innerHTML =
-                  "OneTrust link not available. Please try again after 10 mins. If the problem persists, please contact IT Support.";
-              };
-            } else {
-              window.location.replace(redirectURL);
-            }
-          });
-      }
+				if (entityType === 'Candidate') {
+					if(res.data.data.data.customText36 !== ""){
+                        magicToken = res.data.data.data.customText36;
+                    }else{
+                        magicToken = res.data.data.data.customTextBlock7;
+                    }
+				}
+				else if (entityType === 'ClientContact') {
+					if(res.data.data.data.customText11 !== ""){
+                        magicToken = res.data.data.data.customText11;
+                    }else{
+                        magicToken = res.data.data.data.customTextBlock2;
+                    }
+				}
+				else {
+					if(res.data.data.data.customText13 !== ""){
+                        magicToken = res.data.data.data.customText13;
+                    }else{
+                        magicToken = res.data.data.data.customTextBlock3;
+                    }
+				}
+				console.log("magicToken", magicToken);
+				redirectURL = redirectURL + magicToken;
+				console.log('redirectURL: ', redirectURL);
+		
+				if (!magicToken || magicToken === null || magicToken === "") {
+					window.onload = function() {
+						console.log('Magictoken null or blank');
+						document.getElementById("displayMsg").innerHTML='OneTrust link not available. Please try again after 10 mins. If the problem persists, please contact IT Support.';		
+					}
+				}
+				else {
+					window.location.replace(redirectURL);
+				}
+			});
+		}
+
+		/*-- Italy --*/
+		if (countryLabel === 37554 || countryLabel === 37482) {
+			if (entityType === 'Candidate') {
+				retrevalURL = `entity/${entityType}/${entityID}?fields=customText36,customTextBlock7`;
+				redirectURL = itCandOTPCURL;
+			}
+			else if (entityType === 'ClientContact') {
+				retrevalURL = `entity/${entityType}/${entityID}?fields=customText11,customTextBlock2`;			
+				redirectURL = itContOTPCURL;
+			}
+			else {
+				retrevalURL = `entity/${entityType}/${entityID}?fields=customText13,customTextBlock3`;
+				redirectURL = itLeadOTPCURL;
+			}
+			postRobot.send(window.parent.parent, "httpGET", {relativeURL: retrevalURL,})
+			.then(function(res) {
+				console.log("res.data.data", res.data.data);
+				
+				if (entityType === 'Candidate') {
+					if(res.data.data.data.customText36 !== ""){
+                        magicToken = res.data.data.data.customText36;
+                    }else{
+                        magicToken = res.data.data.data.customTextBlock7;
+                    }
+				}
+				else if (entityType === 'ClientContact') {
+					if(res.data.data.data.customText11 !== ""){
+                        magicToken = res.data.data.data.customText11;
+                    }else{
+                        magicToken = res.data.data.data.customTextBlock2;
+                    }
+				}
+				else {
+					if(res.data.data.data.customText13 !== ""){
+                        magicToken = res.data.data.data.customText13;
+                    }else{
+                        magicToken = res.data.data.data.customTextBlock3;
+                    }
+				}
+				console.log("magicToken", magicToken);
+				redirectURL = redirectURL + magicToken;
+				console.log('redirectURL: ', redirectURL);
+		
+				if (!magicToken || magicToken === null || magicToken === "") {
+					window.onload = function() {
+						console.log('Magictoken null or blank');
+						document.getElementById("displayMsg").innerHTML='OneTrust link not available. Please try again after 10 mins. If the problem persists, please contact IT Support.';		
+					}
+				}
+				else {
+					window.location.replace(redirectURL);
+				}
+			});
+		}
+
+		/*-- Spain UAT/Training --*/
+		if (countryLabel === 38723 || countryLabel === 38724) {
+			if (entityType === 'Candidate') {
+				retrevalURL = `entity/${entityType}/${entityID}?fields=customText36,customTextBlock7`;
+				redirectURL = esCandOTPCURLtrng;
+			}
+			else if (entityType === 'ClientContact') {
+				retrevalURL = `entity/${entityType}/${entityID}?fields=customText11,customTextBlock2`;			
+				redirectURL = esContOTPCURLtrng;
+			}
+			else { 
+				retrevalURL = `entity/${entityType}/${entityID}?fields=customText13,customTextBlock3`;
+				redirectURL = esLeadOTPCURL;
+			}
+			
+			postRobot.send(window.parent.parent, "httpGET", {relativeURL: retrevalURL,})
+			.then(function(res) {
+				console.log("res.data.data", res.data.data);
+
+				if (entityType === 'Candidate') {
+					if(res.data.data.data.customText36 !== ""){
+                        magicToken = res.data.data.data.customText36;
+                    }else{
+                        magicToken = res.data.data.data.customTextBlock7;
+                    }
+				}
+				else if (entityType === 'ClientContact') {
+					if(res.data.data.data.customText11 !== ""){
+                        magicToken = res.data.data.data.customText11;
+                    }else{
+                        magicToken = res.data.data.data.customTextBlock2;
+                    }
+				}
+				else {
+					if(res.data.data.data.customText13 !== ""){
+                        magicToken = res.data.data.data.customText13;
+                    }else{
+                        magicToken = res.data.data.data.customTextBlock3;
+                    }
+				}
+				console.log("magicToken", magicToken);
+				redirectURL = redirectURL + magicToken;
+				console.log('redirectURL: ', redirectURL);
+		
+				if (!magicToken || magicToken === null || magicToken === "") {
+					window.onload = function() {
+						console.log('Magictoken null or blank');
+						document.getElementById("displayMsg").innerHTML='OneTrust link not available. Please try again after 10 mins. If the problem persists, please contact IT Support.';		
+					}
+				}
+				else {
+					window.location.replace(redirectURL);
+				}
+			});
+		}
+
+		/*-- Italy UAT/Training --*/
+		if (countryLabel === 38766 || countryLabel === 38768) {
+			if (entityType === 'Candidate') {
+				retrevalURL = `entity/${entityType}/${entityID}?fields=customText36,customTextBlock7`;
+				redirectURL = itCandOTPCURLtrng;
+			}
+			else if (entityType === 'ClientContact') {
+				retrevalURL = `entity/${entityType}/${entityID}?fields=customText11,customTextBlock2`;			
+				redirectURL = itContOTPCURLtrng;
+			}
+			else {
+				retrevalURL = `entity/${entityType}/${entityID}?fields=customText13,customTextBlock3`;
+				redirectURL = itLeadOTPCURLtrng;
+			}
+			postRobot.send(window.parent.parent, "httpGET", {relativeURL: retrevalURL,})
+			.then(function(res) {
+				console.log("res.data.data", res.data.data);
+				
+				if (entityType === 'Candidate') {
+					if(res.data.data.data.customText36 !== ""){
+                        magicToken = res.data.data.data.customText36;
+                    }else{
+                        magicToken = res.data.data.data.customTextBlock7;
+                    }
+				}
+				else if (entityType === 'ClientContact') {
+					if(res.data.data.data.customText11 !== ""){
+                        magicToken = res.data.data.data.customText11;
+                    }else{
+                        magicToken = res.data.data.data.customTextBlock2;
+                    }
+				}
+				else {
+					if(res.data.data.data.customText13 !== ""){
+                        magicToken = res.data.data.data.customText13;
+                    }else{
+                        magicToken = res.data.data.data.customTextBlock3;
+                    }
+				}
+				console.log("magicToken", magicToken);
+				redirectURL = redirectURL + magicToken;
+				console.log('redirectURL: ', redirectURL);
+		
+				if (!magicToken || magicToken === null || magicToken === "") {
+					window.onload = function() {
+						console.log('Magictoken null or blank');
+						document.getElementById("displayMsg").innerHTML='OneTrust link not available. Please try again after 10 mins. If the problem persists, please contact IT Support.';		
+					}
+				}
+				else {
+					window.location.replace(redirectURL);
+				}
+			});
+		}
+
+		/*-- Switzerland UAT/Training --*/
+		if (countryLabel === 38769 || countryLabel === 38777 || countryLabel === 38778) {
+            if (entityType === 'Candidate') {
+				retrevalURL = `entity/${entityType}/${entityID}?fields=customText36,customTextBlock7`;
+				redirectURL = chCandOTPCURLtrng;
+			}
+			else if (entityType === 'ClientContact') {
+				retrevalURL = `entity/${entityType}/${entityID}?fields=customText11,customTextBlock2`;			
+				redirectURL = chContOTPCURLtrng;
+			}
+			else {
+				retrevalURL = `entity/${entityType}/${entityID}?fields=customText13,customTextBlock3`;
+				redirectURL = chLeadOTPCURL;
+			}
+			postRobot.send(window.parent.parent, "httpGET", {relativeURL: retrevalURL,})
+			.then(function(res) {
+				console.log("res.data.data", res.data.data);
+
+				if (entityType === 'Candidate') {
+					if(res.data.data.data.customText36 !== ""){
+                        magicToken = res.data.data.data.customText36;
+                    }else{
+                        magicToken = res.data.data.data.customTextBlock7;
+                    }
+				}
+				else if (entityType === 'ClientContact') {
+					if(res.data.data.data.customText11 !== ""){
+                        magicToken = res.data.data.data.customText11;
+                    }else{
+                        magicToken = res.data.data.data.customTextBlock2;
+                    }
+				}
+				else {
+					if(res.data.data.data.customText13 !== ""){
+                        magicToken = res.data.data.data.customText13;
+                    }else{
+                        magicToken = res.data.data.data.customTextBlock3;
+                    }
+				}
+				console.log("magicToken", magicToken);
+				redirectURL = redirectURL + magicToken;
+				console.log('redirectURL: ', redirectURL);
+		
+				if (!magicToken || magicToken === null || magicToken === "") {
+					window.onload = function() {
+						console.log('Magictoken null or blank');
+						document.getElementById("displayMsg").innerHTML='OneTrust link not available. Please try again after 10 mins. If the problem persists, please contact IT Support.';		
+					}
+				}
+				else {
+					window.location.replace(redirectURL);
+				}
+			});
+		}
+
     </script>
-    <h1 id="displayMsg">
-      OneTrust link not available. Please try again after 10 mins. If the
-      problem persists, please contact IT Support.
-    </h1>
-  </body>
+	<H1 id="displayMsg">OneTrust link not available. Please try again after 10 mins. If the problem persists, please contact IT Support.</H1>
+</body>
 </html>
